@@ -1,0 +1,50 @@
+解压缩
+tar zxvf apache-tomcat-8.5.34.tar.gz
+
+
+移动并重命名
+sudo mv apache-tomcat-8.5.34 /usr/local/tomcat
+
+
+启动tomcat服务  cd /usr/local/tomcat/bin
+启动 ./startup.sh
+关闭 ./shutdown.sh
+
+
+修改配置文件 cd /usr/local/tomcat/conf
+配置文件server.xml   修改端口和host等
+修改host   本机ip 192.168.1.9 局域网可以访问  
+
+
+防火墙允许8080端口对外开放
+sudo ufw allow 8080
+
+
+浏览器打开
+http://127.0.0.1:8080/
+
+
+jdk_home  jre_home  没有设置
+
+
+
+
+jenkins安装
+
+jenkins.war包mv到/usr/local/tomcat/webapps 目录下
+重启tomcat服务   关闭 ./shutdown.sh   启动 ./startup.sh
+浏览器打开（加载jenkins需要等待一会）  http://127.0.0.1:8080/jenkins/
+
+
+密钥在   /home/erzeal/.jenkins/secrets/initialAdminPassword    文件中   5f9c60c6019d4ce9b5575ee05524c3a6
+
+
+选择安装推荐插件
+创建账户  erzeal  123456   ezreal  921421398@qq.com
+
+setupwizard[jenkins] 卡主的情况解决
+赋予所有的权限（包括jenkins）   chmod 777 *
+赋予权限后，重启tomcat服务，静心等加载完成
+
+英文界面更改成中文，需要下载locale插件，来设置语言
+

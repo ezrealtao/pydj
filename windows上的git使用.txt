@@ -1,0 +1,55 @@
+密钥ssh的生成和配置
+https://blog.csdn.net/u011781769/article/details/54963757
+
+git推送到github上
+https://blog.csdn.net/bitboss/article/details/53037540?from=timeline&isappinstalled=0
+
+
+第一步：创建.ssh文件夹--添加ssh-key文件
+cd ~/.ssh/
+mkdir ~/.ssh
+配置全局信息
+git config --global user.name "ezrealtao"
+git config --global user.email "921421398@qq.com"
+
+生成key
+ssh-keygen -t rsa -C "921421398@qq.com"
+三次回车后就生成了id_rsa和id_rsa.pub两个文件（在C盘用户里找.ssh文件夹下）
+复制id_rsa.pub文件里的内容，粘贴到github上的setting/ssh-key 创建ssh-key
+
+
+
+第二步：建立本地库
+mdkir E:\Git\pydj  创建文件夹
+
+cd到该文件夹下git init初始化仓库
+若要删除本地仓库  rm -rf .git  删除.git文件即可
+
+
+
+第三步：提交文件
+
+1.复制文件到该区域
+2.git add .  添加
+3.git commit -m "提交信息"
+
+
+第四步：推送到github
+
+git remote add origin https://github.com/ezrealtao/pydj.git  和github建立连接
+git pull origin master 远程分支合并到本地分支(每次push都要pull合并本地分支)
+git push origin master  本地分支master提交github的远程分支master
+
+
+第五步：其他分支操作
+
+git fetch origin master
+
+git merge origin/master
+
+git pull 
+git clone https://github.com/ezrealtao/pydj.git
+git push https://github.com/ezrealtao/pydj.git
+
+
+  

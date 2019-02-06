@@ -1,0 +1,130 @@
+
+
+命令
+cd ~/taozhen       cd ~/下载
+创建文件和目录 mkdir /home/taozhen   mkdir /home/test.txt
+查找文件 sudo find / -name my-new.cnf
+复制文件 cp /mnt/hgfs/linux/jdk-8u60-linux-x64.tar.gz /usr/java/
+移动文件 sudo mv default /etc/nginx/sites-available/
+重命名   mv mysql-5.6.41-linux-glibc2.12-x86_64 mysql
+查看linux的位数    sudo uname --m
+环境变量查看  export   单独查看环境变量echo $PATH
+root安装  sudo apt-get install root-system-bin
+设置软链接  ln -s /usr/java/jdk1.8.0_60/ /usr/jdk
+查看3306端口是否正常  netstat -an | grep 3306
+
+
+更新setuptools  
+sudo pip3 install --upgrade setuptools
+
+报错解决 error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
+sudo apt-get build-dep python-lxml
+sudo pip3 install lxml --upgrade
+sudo pip3 install pymysql
+
+
+安装Django     sudo pip3 install Django==1.8.9
+
+
+安装pycharm
+1.解压  tar -xvzf pycharm-community-2018.2.2.tar.gz
+2.到 cd /home/ezreal/taozhen/pycharm/bin
+3.打开pycharm   sh pycharm.sh & 
+
+
+安装uWSGI  pip3 install uWSGI
+运行uWSGI  1.cd到文件目录下   uwsgi --http :8001 --wsgi-file test.py
+
+uWSGI运行Django 
+uwsgi --http :8000 --chdir /home/ezreal/pydj/autotest/ --wsgi-file 
+autotest/wsgi.py --master --processes 4 --stata 127.0.0.1:9191 
+使用uWSGI和nginx如何设置连接超时时间
+
+安装Nginx   
+sudo apt-get install nginx 
+查看版本  nginx -v  
+sudo /etc/init.d/nginx start  启动
+sudo /etc/init.d/nginx stop  关闭
+sudo /etc/init.d/nginx restart  重启
+
+
+读取ini文件配置,来启动uWSGI
+1.  cd /home/ezreal/pydj/taozhen
+2.  uwsgi --ini django_uwsgi.ini
+
+关闭uwsgi服务
+pkill -f uwsgi -9
+
+
+打开nginx的日志（nginx日志默认的路径\var\log\nginx\error.log）
+
+
+
+Nginx配置
+/etc/nginx/sites-available/default  配置文件
+server {
+	listen 8089;
+	listen [::]:8089;
+
+	server_name 127.0.0.1 192.168.1.8;
+
+	location / {
+		include /etc/nginx/uwsgi_params;
+                uwsgi_pass  127.0.0.1:8000;
+	}
+}
+
+
+uwsgi配置文件
+[uwsgi]
+# 请求方式与端口号
+socket = :8000
+chdir = /home/ezreal/pydj/taozhen
+module = taozhen.wsgi
+master = true
+processes = 3
+vacuum = true
+
+
+
+安装celery定时任务
+sudo pip3 install pyramid_celery
+sudo pip3 install django-celery
+sudo pip3 install django_celery_beat       ok
+sudo pip3 install celery-with-redis
+
+
+其他安装
+sudo apt-get install rpm   rpm安装
+sudo apt-get install vim   vim安装
+
+
+ssh安装   sudo apt-get install openssh-server
+ssh服务状态  sudo service ssh status
+ssh服务开启  sudo service ssh start
+ssh卸载   sudo apt-get install -purge remove sshd
+
+ubuntu防火墙
+安装防火墙 sudo apt-get install ufw
+启用防火墙 sudo ufw enable     sudo ufw default deny 
+关闭防火墙 sudo ufw disable 
+防火墙状态 sudo ufw status 
+允许外部访问80端口 sudo ufw allow 80     sudo ufw allow 3306   
+禁止外部访问80端口 sudo ufw delete allow 80    sudo ufw delete allow 3306
+允许此IP访问所有的本机端口 sudo ufw allow from 192.168.1.1 
+
+
+centos防火墙firewall  iptable
+/etc/init.d/iptables status
+/etc/init.d/iptables stop
+
+启动项管理工具sysv-rc-conf
+安装  sudo apt-get install sysv-rc-conf
+查看启动服务  sudo sysv-rc-conf
+命令来管理就是update-rc.d命令，通过--help看下帮助
+
+chkconfig安装 
+下载chkconfig.deb包  该目录下执行命令安装 sudo dpkg -i chkconfig.deb
+
+Catalina
+

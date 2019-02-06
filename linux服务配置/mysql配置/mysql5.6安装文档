@@ -1,0 +1,133 @@
+参考链接   https://blog.csdn.net/zyjcxc/article/details/79602748
+
+帐号 密码  127.0.0.1:3306  root  root 
+MySql Workbenth数据库工作台安装 sudo apt-get install mysql-workbench
+查看数据库3306端口是否正常  netstat -an | grep 3306
+[client]
+port		= 3306
+socket		= /var/run/mysqld/mysqld.sock
+
+修改 /etc/mysql  下的my.cnf 配置文件 
+设置 bind-address = 0.0.0.0 之后，其他主机可以访问
+
+检查是否已经安装过mysql：
+sudo rpm -qa | grep mysql
+
+
+查找并删除mysql有关的文件
+find / -name mysql rm -rf 上边查找到的路径，多个路径用空格隔开
+或者下边一条命令即可
+find / -name mysql|xargs rm -rf
+
+
+1.在安装包存放目录下执行命令解压文件：
+    mkdir /usr/local/mysql
+    tar -zxvf mysql-5.6.41-linux-glibc2.12-x86_64.tar.gz
+    mv 改名操作 或者 复制cp， 总之是让tar解压后的文件到mysql目录下即可
+    sudo mv mysql /usr/local
+
+2.添加mysql用户组和mysql用户
+先检查是否有mysql用户组和mysql用户
+groups mysql
+若无，则添加；
+groupadd mysql          useradd -r -g mysql mysql
+若有，则跳过；
+
+
+3.进入mysql目录更改权限
+cd /usr/local/mysql       chown -R mysql:mysql ./
+
+
+4.执行安装脚本
+安装依赖包  sudo apt-get install libaio-dev
+执行安装脚本  sudo ./scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data
+
+安装提示WARNING: Found existing config file ./my.cnf on the system.
+Because this file might be in use, it was not replaced,
+but was used in bootstrap (unless you used --defaults-file)
+and when you later start the server.
+The new default config file was created as ./my-new.cnf,
+please compare it with your file and take the changes you need.
+
+配置文件地址    /usr/local/mysql/my-new.cnf
+
+
+安装完之后修改当前目录拥有者为root用户，修改data目录拥有者为mysql
+sudo chown -R root:root ./
+sudo chown -R mysql:mysql data
+
+
+5.更改mysql密码
+先启动mysql  cd /usr/local/mysql     ./support-files/mysql.server start
+
+此时遇到过 MySQL启动出现The server quit without updating PID file....
+Starting MySQL
+.Logging to '/usr/local/mysql/data/ezreal.err'.
+... * The server quit without updating PID file (/usr/local/mysql/data/ezreal.pid).
+
+错误信息log地址   /usr/local/mysql/data/ezreal.pid
+
+解决办法
+sudo ./scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data
+
+
+MySQL启动之后再执行如下命令更改密码：
+sudo ./bin/mysqladmin -u root -h localhost.localdomain password 'root'
+密码更改后即可登录MySQL:
+sudo ./bin/mysql -h127.0.0.1 -uroot -proot
+
+
+增加系统环境变量（全用户，永久）
+sudo vim /etc/profile
+键入i  文档最后加入：  export PATH="/usr/local/mysql/bin:$PATH"
+ESC退出插入模式（i）   输入：wq！  保存并退出
+最后执行立即生效：  source /etc/profile
+
+
+登陆mysql之后，赋予别的主机root访问数据库权限
+grant all privileges on *.* to root@'%' identified by 'root'; flush privileges;
+
+
+
+将MySQL加入Service系统服务 cd /usr/local/mysql
+cp support-files/mysql.server /etc/init.d/mysqld 
+chkconfig --add mysqld
+chkconfig mysqld on 
+sudo service mysqld restart  
+sudo service mysqld status
+
+
+配置my.cnf（本人没有配置）
+vim my.cnf #添加以下两条语句并保存退出 
+default-character-set=utf8 
+lower_case_table_names=1 
+max_allowed_packet=100M
+
+
+
+Ｍysql启动关闭服务（前提是需要把mysql加入服务）
+sudo service mysqld start
+sudo service mysqld stop
+sudo service mysqld restart
+
+
+
+
+命令行启动关闭服务 cd /usr/local/mysql  
+sudo ./support-files/mysql.server start  开启
+sudo ./support-files/mysql.server stop  关闭
+sudo ./support-files/mysql.server restart  重启
+
+
+启动mysql服务时出现“* Couldn't find MySQL server (/usr/bin/mysqld_safe)”
+解决方法：   sudo rm /etc/mysql/my.cnf
+
+
+安装flush  可以使用grant   sudo apt-get install flush
+
+
+
+
+
+
+

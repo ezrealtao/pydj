@@ -1,0 +1,149 @@
+参考菜鸟教程   http://www.runoob.com/svn/svn-tutorial.html
+
+查看程序的版本号和版本库访问模块  svn --version
+
+可用的子命令:
+   add
+   blame (praise, annotate, ann)
+   cat
+   changelist (cl)
+   checkout (co)
+   cleanup
+   commit (ci)
+   copy (cp)
+   delete (del, remove, rm)
+   diff (di)
+   export
+   help (?, h)
+   import
+   info
+   list (ls)
+   lock
+   log
+   merge
+   mergeinfo
+   mkdir
+   move (mv, rename, ren)
+   patch
+   propdel (pdel, pd)
+   propedit (pedit, pe)
+   propget (pget, pg)
+   proplist (plist, pl)
+   propset (pset, ps)
+   relocate
+   resolve
+   resolved
+   revert
+   status (stat, st)
+   switch (sw)
+   unlock
+   update (up)
+   upgrade
+
+
+版本库位置  /home/ezreal/svn
+
+安装SVN   sudo apt-get install subversion
+创建目录   sudo mkdir svn
+创建版本库   sudo svnadmin create /home/ezreal/svn/ku
+
+
+4 配置  cd /home/ezreal/svn/conf    sudo vim svnserve.conf
+我们需要修改conf目录下的三个文件，authz,passwd,svnserve.conf
+(1)编辑svnserve.conf 
+
+[general]
+#匿名用户不可读
+anon-access = none
+#权限用户可写
+auth-access = write
+#密码文件为passwd
+password-db = passwd
+#权限文件为authz
+authz-db = authz
+
+
+(2)编辑authz   sudo vim authz
+[groups]
+admin= test #admin组的用户为test
+
+[/] #必须写/，因为这表示从仓库的目录开始设置权限
+@admin = rw #admin组有rw(读写权限)，所有人有r(读权限)
+* = r
+
+注释：这里组的名字不一定叫admin，组的名字可以任务，admin组有多个用户的话，可以这样制定admin=tone,tone1,tone2等。
+
+
+（3）编辑passwd文件，设定用户密码
+[users]
+# harry = harryssecret
+# sally = sallyssecret
+test=123456 #设定用户test的密码是123456
+
+
+5 启动SVN服务器   sudo svnserve -d -r 目录 --listen-port 端口号  默认3690端口
+启动服务器 sudo svnserve -d -r /home/ezreal/svn/ku 
+-d 已守护模式启动
+-r 指定svn版本库根目录，这样是便于客户端不用输入全路径，就可以访问版本库了。
+例如：svn://ip:port/svn    svn://192.168.1.9/ku      svn://127.0.0.1/ku
+关闭服务svnserver   sudo killall svnserve
+
+checkout检出操作   sudo svn checkout svn://192.168.1.9/ku --username=test
+
+
+查看更改      svn diff
+更新工作副本（本地仓库）至最新版本  svn update
+指定更新到哪个版本  svn update -r6
+提交          svn commit -m "注释"   
+查看工作副本的状态  svn status
+将文件添加到版本控制     svn add 文件名
+放弃对文件的修改，回退版本   svn revert 文件名
+放弃对目录的修改，回退版本   svn revert -R trunk
+恢复一个已经提交的版本，为了消除一个旧版本，我们必须撤销旧版本里的所有更改然后提交一个新版本。这种操作叫做 reverse merge（反向合并）
+首先，找到仓库的当前版本，现在是版本 22，我们要撤销回之前的版本，比如版本 21。
+svn merge -r 22:21 readme 
+
+
+
+查看SVN的历史
+svn log 用来展示svn 的版本作者、日期、路径等等
+svn diff 用来显示特定修改的行级详细信息
+svn cat 取得在特定版本的某文件显示在当前屏幕
+svn list 显示一个目录或某一版本存在的文件
+
+
+
+svn log -r 6:8  查看特定两个版本间的信息
+svn log trunk/文件名    只查看某一个文件的版本修改信息
+svn log -l 5 -v     限定展示5条记录的目录信息
+svn diff -r 3 rule.txt  比较工作拷贝和版本库      版本号为 3 的文件 rule.txt
+svn diff -r 2:3 rule.txt  比较版本库与版本库      版本号2和3的rule.txt文件的变化
+svn cat -r 版本号 rule.txt  只是希望检查一个过去版本，不希望查看他们的区别
+svn list http://192.168.1.9/svn  在不下载文件到本地目录的情况下来察看目录中的文件
+
+
+
+分支
+svn copy trunk/ branches/my_branch   拷贝truck主分支，建立my_branch分支
+svn status   查看分支状态
+svn commit -m "add my_branch"  提交新增分支到版本库
+
+cd branches/my_branch/   切换到my_branch分支进行开发
+该分支下创建index.html文件    添加add   提交commit
+
+
+切换到 trunk 主分支，执行 svn update，然后将 my_branch 分支合并到 trunk 中
+svn merge ../branches/my_branch/   合并分支到truck主分支
+ll命令查看 该目录下，有my_brahch分支创建的文件
+最后 将合并好的 trunk 提交到版本库中  svn commit -m "注释"
+
+
+
+标签（app版本号）
+svn copy trunk/ tags/v1.0   我们在本地工作副本创建一个 tag标签v1.0
+面的代码成功完成，新的目录将会被创建在 tags 目录下 ls tags/  ls tags/v1.0/
+svn status  查看状态
+svn commit -m "tags v1.0"  提交tag内容
+
+
+认证配置无效 账户名和密码都对 怎么改

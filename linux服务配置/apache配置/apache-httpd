@@ -1,0 +1,40 @@
+apr  和 apr-util  和  pcre   安装
+
+wget http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-1.6.3.tar.gz
+
+wget http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-util-1.6.1.tar.gz
+
+https://sourceforge.net/projects/pcre/
+
+wget http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-iconv-1.2.2.tar.gz
+      
+#获取运行tomcat（无论内置还是外置，对应tomcat版本下的/bin/tomcat-native.tar.gz 目前版本为1.2.14）
+      
+    tar zxvf apr-1.6.3.tar.gz         
+    tar zxvf apr-util-1.6.1.tar.gz    
+    tar zxvf apr-iconv-1.2.2.tar.gz
+    tar zxvf tomcat-native.tar.gz
+
+
+APR安装   cd /usr/local/apr
+tar zxvf apr-1.6.3.tar.gz  
+sudo mv apr-1.6.3 /usr/local/apr
+sudo ./configure --prefix=/usr/local/apache/  --with-apr=/usr/local/apr/
+sudo make && make install
+
+
+APR-util安装 cd /usr/local/apr-util
+tar zxvf apr-util-1.6.1.tar.gz
+sudo mv apr-util-1.6.1 /usr/local/apr-util
+sudo ./configure --prefix=/usr/local/apr-util/ --with-apr=/usr/local/apr/
+sudo make && make install
+
+
+
+pcre安装 cd /usr/local/pcre
+tar zxvf pcre2-10.32.tar.gz
+sudo mv pcre2-10.32 /usr/local/pcre
+sudo ./configure --prefix=/usr/local/pcre/
+sudo make && make install
+
+
